@@ -1,0 +1,18 @@
+
+> fintrix-web@0.1.0 dev
+> next dev -p 3003
+
+  ▲ Next.js 14.2.7
+  - Local:        http://localhost:3003
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 3.2s
+ ○ Compiling /ai-agent ...
+ ✓ Compiled /ai-agent in 9.8s (551 modules)
+ GET /ai-agent 200 in 10296ms
+ GET /ai-agent 200 in 98ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 817ms (557 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 2.1s (531 modules)

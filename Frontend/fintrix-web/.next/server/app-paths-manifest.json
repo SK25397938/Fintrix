@@ -1,0 +1,9 @@
+{
+  "/page": "app/page.js",
+  "/what-if-simulator/page": "app/what-if-simulator/page.js",
+  "/evaluation-simulator/page": "app/evaluation-simulator/page.js",
+  "/ai-agent/page": "app/ai-agent/page.js",
+  "/news/page": "app/news/page.js",
+  "/learn/page": "app/learn/page.js",
+  "/blog/page": "app/blog/page.js"
+}

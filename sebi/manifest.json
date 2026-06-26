@@ -1,0 +1,124 @@
+{
+  "documents": [
+    {
+      "id": "sebi-001",
+      "category": "master_circulars",
+      "title": "Master Circular for compliance with the provisions of the SEBI LODR Regulations, 2015",
+      "official_url": "https://www.sebi.gov.in/legal/master-circulars/jan-2026/master-circular-for-compliance-with-the-provisions-of-the-securities-and-exchange-board-of-india-listing-obligations-and-disclosure-requirements-regulations-2015-by-listed-entities_99432.html",
+      "suggested_file": "documents/sebi/master_circulars/1769776024792.pdf",
+      "published_date": "2026-01-30",
+      "priority": "high",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-002",
+      "category": "master_circulars",
+      "title": "Master Circular for Stock Brokers",
+      "official_url": "https://www.sebi.gov.in/legal/master-circulars/jun-2025/master-circular-for-stock-brokers_94623.html",
+      "suggested_file": "documents/sebi/master_circulars/1750158789381.pdf",
+      "published_date": "2025-06-17",
+      "priority": "high",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-003",
+      "category": "master_circulars",
+      "title": "Master Circular for Debenture Trustees",
+      "official_url": "https://www.sebi.gov.in/legal/master-circulars/aug-2025/master-circular-for-debenture-trustees-dts-_96073.html",
+      "suggested_file": "documents/sebi/master_circulars/1755087354414.pdf",
+      "published_date": "2025-08-13",
+      "priority": "high",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-004",
+      "category": "master_circulars",
+      "title": "Master Circular for issue and listing of Non-convertible Securities, SDI, SR, MDS and CP",
+      "official_url": "https://www.sebi.gov.in/legal/master-circulars/oct-2025/master-circular-for-issue-and-listing-of-non-convertible-securities-securitised-debt-instruments-security-receipts-municipal-debt-securities-and-commercial-paper_97343.html",
+      "suggested_file": "documents/sebi/master_circulars/1760532257519.pdf",
+      "published_date": "2025-10-15",
+      "priority": "high",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-005",
+      "category": "master_circulars",
+      "title": "Master Circular for LODR for Non-convertible Securities / SDI / CP",
+      "official_url": "https://www.sebi.gov.in/legal/master-circulars/jul-2025/master-circular-for-listing-obligations-and-disclosure-requirements-for-non-convertible-securities-securitized-debt-instruments-and-or-commercial-paper_95230.html",
+      "suggested_file": "documents/sebi/master_circulars/1752233667904.pdf",
+      "published_date": "2025-07-11",
+      "priority": "high",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-006",
+      "category": "regulations",
+      "title": "SEBI Issue and Listing of Non-Convertible Securities Regulations, 2021",
+      "official_url": "https://www.sebi.gov.in/legal/regulations/jan-2026/securities-and-exchange-board-of-india-issue-and-listing-of-non-convertible-securities-regulations-2021-amended-as-on-january-21-2026-_99288.html",
+      "suggested_file": "documents/sebi/regulations/1769162648420.pdf",
+      "published_date": "2026-01-21",
+      "priority": "high",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-007",
+      "category": "regulations",
+      "title": "SEBI Issue and Listing of Non-Convertible Securities Amendment Regulations, 2025",
+      "official_url": "https://www.sebi.gov.in/legal/regulations/oct-2025/securities-and-exchange-board-of-india-issue-and-listing-of-non-convertible-securities-amendment-regulations-2025_97593.html",
+      "suggested_file": "documents/sebi/regulations/1762162068069.pdf",
+      "published_date": "2025-10-28",
+      "priority": "medium",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-008",
+      "category": "regulations",
+      "title": "SEBI Prohibition of Insider Trading Regulations, 2015",
+      "official_url": "https://www.sebi.gov.in/legal/regulations/mar-2025/securities-and-exchange-board-of-india-prohibition-of-insider-trading-regulations-2015-last-amended-on-march-12-2025-_92672.html",
+      "suggested_file": "documents/sebi/regulations/1752572636085.pdf",
+      "published_date": "2025-03-12",
+      "priority": "high",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-009",
+      "category": "circulars",
+      "title": "Industry Standards on Regulation 30 of SEBI LODR Regulations, 2015",
+      "official_url": "https://www.sebi.gov.in/legal/circulars/feb-2025/industry-standards-on-regulation-30-of-sebi-listing-obligations-and-disclosure-requirements-regulations-2015_92172.html",
+      "suggested_file": "documents/sebi/circulars/1740483434491.pdf",
+      "published_date": "2025-02-25",
+      "priority": "medium",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-010",
+      "category": "circulars",
+      "title": "Circular on forms for registration of stock brokers and clearing members",
+      "official_url": "https://www.sebi.gov.in/legal/circulars/feb-2026/circular-on-forms-for-registration-of-stock-brokers-and-clearing-members_99814.html",
+      "suggested_file": "documents/sebi/circulars/1771327465440.pdf",
+      "published_date": "2026-02-17",
+      "priority": "medium",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-011",
+      "category": "circulars",
+      "title": "Automation of continual disclosures under Regulation 7(2) of PIT Regulations, 2015",
+      "official_url": "https://www.sebi.gov.in/legal/circulars/aug-2021/automation-of-continual-disclosures-under-regulation-7-2-of-sebi-prohibition-of-insider-trading-regulations-2015-system-driven-disclosures-ease-of-doing-business_51848.html",
+      "suggested_file": "documents/sebi/regulations/1628856108155.pdf",
+      "published_date": "2021-08-13",
+      "priority": "medium",
+      "status": "pending_download"
+    },
+    {
+      "id": "sebi-012",
+      "category": "circulars",
+      "title": "Inclusion of Mutual Fund units in the PIT Regulations, 2015",
+      "official_url": "https://www.sebi.gov.in/legal/circulars/oct-2024/inclusion-of-mutual-fund-units-in-the-sebi-prohibition-of-insider-trading-regulations-2015_87833.html",
+      "suggested_file": "documents/sebi/regulations/1729586000981.pdf",
+      "published_date": "2024-10-22",
+      "priority": "medium",
+      "status": "pending_download"
+    }
+  ]
+}

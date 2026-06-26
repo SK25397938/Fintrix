@@ -1,0 +1,8 @@
+Sample SEBI local-ingestion document placeholder.
+
+Replace this file with reviewed official SEBI text or extracted PDF text.
+Suggested workflow:
+1. Open the official SEBI page or PDF manually.
+2. Save the official PDF locally or extract it to text.
+3. Place the reviewed file in documents/sebi/.
+4. Ingest it through the manual-document API or a script.
