@@ -98,19 +98,55 @@ export default function WhatIfPage() {
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <div className={`rounded-2xl border p-4 ${darkMode ? "border-white/10 bg-white/5" : "border-fintrix-dark/10 bg-[#f8fbf5]"}`}>
                   <div className="text-sm uppercase tracking-[0.2em] text-fintrix-accent">Compliance</div>
-                  <div className="mt-2 text-lg font-semibold">{result.compliance_status || "Unknown"}</div>
+                  <div
+  className={`mt-2 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+    result.compliance_status?.includes("Non")
+      ? "bg-red-500/20 text-red-400"
+      : "bg-green-500/20 text-green-400"
+  }`}
+>
+  {result.compliance_status || "Unknown"}
+</div>
                 </div>
                 <div className={`rounded-2xl border p-4 ${darkMode ? "border-white/10 bg-white/5" : "border-fintrix-dark/10 bg-[#f8fbf5]"}`}>
                   <div className="text-sm uppercase tracking-[0.2em] text-fintrix-accent">Risk Level</div>
-                  <div className="mt-2 text-lg font-semibold">{result.risk_level || "Unknown"}</div>
+                  <div
+  className={`mt-2 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+    result.risk_level === "High"
+      ? "bg-red-500/20 text-red-400"
+      : result.risk_level === "Medium"
+      ? "bg-yellow-500/20 text-yellow-400"
+      : "bg-green-500/20 text-green-400"
+  }`}
+>
+  {result.risk_level || "Unknown"}
+  </div>
                 </div>
+
+                <div
+  className={`rounded-2xl border p-4 ${
+    darkMode
+      ? "border-white/10 bg-white/5"
+      : "border-fintrix-dark/10 bg-[#f8fbf5]"
+  }`}
+>
+  <div className="text-sm uppercase tracking-[0.2em] text-fintrix-accent">
+    Confidence
+  </div>
+
+  <div className="mt-2 text-xl font-bold">
+    {result.confidence ?? 90}%
+  </div>
+</div>
                 <div className={`rounded-2xl border p-4 ${darkMode ? "border-white/10 bg-white/5" : "border-fintrix-dark/10 bg-[#f8fbf5]"}`}>
                   <div className="text-sm uppercase tracking-[0.2em] text-fintrix-accent">Rule Summary</div>
                   <div className={`mt-2 text-base font-medium leading-6 ${darkMode ? "text-white/88" : "text-fintrix-ink/80"}`}>{result.rule_summary || "No rule summary available."}</div>
                 </div>
               </div>
               <div className={`mt-5 rounded-2xl border p-5 ${darkMode ? "border-white/10 bg-white/5" : "border-fintrix-dark/10 bg-[#f8fbf5]"}`}>
-                <h2 className="text-lg font-semibold">Short explanation</h2>
+                <h2 className="text-lg font-semibold">
+Analysis
+</h2>
                 <p className={`mt-3 text-base font-medium leading-7 ${darkMode ? "text-white/88" : "text-fintrix-ink/80"}`}>
                   {result.analysis || result.reason || "No explanation available."}
                 </p>

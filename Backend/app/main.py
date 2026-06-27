@@ -8,6 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
+from .config import load_env
+from .rag import RagService, parse_json_object
 from .sebi import SebiRepository
 from .storage import JsonStore
 
@@ -15,6 +17,7 @@ from .storage import JsonStore
 ROOT_DIR = Path(__file__).resolve().parents[2]
 SEBI_DIR = ROOT_DIR / "sebi"
 DATA_DIR = ROOT_DIR / "Backend" / "data"
+load_env(ROOT_DIR)
 
 app = FastAPI(title="Fintrix API", version="0.1.0")
 app.add_middleware(
@@ -43,6 +46,7 @@ posts = JsonStore(DATA_DIR / "posts.json", _default_posts := [
     }
 ])
 sebi_repo = SebiRepository(SEBI_DIR)
+rag_service = RagService(sebi_repo, DATA_DIR)
 
 
 class AuthPayload(BaseModel):
@@ -113,7 +117,19 @@ def root():
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "sebi_root": str(SEBI_DIR), "sebi_documents": len(sebi_repo.list_documents())}
+    rag_status = rag_service.status()
+    return {
+        "status": "ok",
+        "sebi_root": str(SEBI_DIR),
+        "sebi_documents": rag_status["documents"],
+        "rag_chunks": rag_status["chunks"],
+        "mistral_configured": rag_status["mistral_configured"],
+    }
+
+
+@app.get("/api/rag/status")
+def rag_status():
+    return rag_service.status()
 
 
 @app.post("/api/auth/signup")
@@ -226,42 +242,25 @@ def delete_chat(chat_id: str, user: dict = Depends(current_user)):
 
 @app.post("/api/ai/session/message")
 def ai_message(payload: AiMessagePayload, user: dict = Depends(current_user)):
-    matches = sebi_repo.search(payload.message, limit=4)
-    if matches:
-        source_lines = ", ".join(document["title"] for document in matches[:2])
-        answer = (
-            "I found relevant local SEBI material for this question. "
-            f"The strongest matches are {source_lines}. "
-            "Use the cited PDFs for primary regulatory wording before making a compliance decision."
-        )
-    else:
-        answer = (
-            "I could not find a close match in the local SEBI folder. "
-            "Try naming the regulation, circular topic, intermediary type, or disclosure rule you want to inspect."
-        )
+    result = rag_service.answer(payload.message, mode="ai_agent")
+
     return {
-        "answer": answer,
-        "key_points": [
-            "This response is grounded in the local SEBI folder connected to Fintrix.",
-            "PDF source links open through the FastAPI backend.",
-            "Treat this as research assistance, not legal advice.",
-        ],
-        "sources": [
-            {
-                "title": document["title"],
-                "file": document["filename"],
-                "url": document["url"],
-                "category": document["category"],
-                "published_date": document.get("published_date"),
-            }
-            for document in matches
-            if document.get("filename")
-        ],
-        "helpful_links": [document["official_url"] for document in matches if document.get("official_url")],
-        "source_reliability": {"local_sebi_manifest": "high", "pdf_available": "verified from local files"},
-        "mode": "SEBI_LOCAL",
-        "is_off_topic": False,
-    }
+    "answer": result["answer"],
+    "summary": result["summary"],
+    "key_points": result["key_points"],
+    "risk_level": result["risk_level"],
+    "risk_score": result["risk_score"],
+    "recommendations": result["recommendations"],
+    "confidence": result["confidence"],
+    "sources": result["sources"],
+    "helpful_links": [],
+    "source_reliability": {
+        "local_sebi_rag": "high",
+        "model": result["model"],
+    },
+    "mode": "SEBI_RAG",
+    "is_off_topic": False,
+}
 
 
 @app.post("/api/rules/evaluate")
@@ -270,18 +269,76 @@ def evaluate_rules(payload: EvaluationPayload, user: dict = Depends(current_user
     domain = str(input_data.get("domain", "")).lower()
     amount = float(input_data.get("amount") or 0)
     declared = bool(input_data.get("declared"))
+    description = str(input_data.get("description", "")).strip()
     rules = _rules()
     matched = [
         rule for rule in rules
         if rule["domain"] == domain and amount >= rule["amount_threshold"] and (rule["requires_declaration"] and not declared)
     ]
+    prompt = f"""
+You are Fintrix.
+
+Evaluate this compliance scenario using ONLY the retrieved SEBI regulations.
+
+Scenario
+
+Domain:
+{domain}
+
+Amount:
+₹{amount:,.0f}
+
+Declared:
+{declared}
+
+Description:
+{description}
+
+Return ONLY JSON.
+
+{{
+    "summary":"",
+    "compliance_status":"",
+    "risk_level":"",
+    "risk_score":0,
+    "violated_rules":[],
+    "recommendations":[],
+    "confidence":0
+}}
+"""
+    rag_result = rag_service.answer(prompt, mode="compliance", response_format="evaluation_json")
+    llm_payload = (
+    rag_result
+    if rag_result["used_llm"]
+    else None
+)
+    if llm_payload:
+        llm_payload.setdefault("summary", "Generated from SEBI RAG context.")
+        llm_payload.setdefault("compliance_status", "Needs Review")
+        llm_payload.setdefault("risk_level", "Medium")
+        llm_payload.setdefault("risk_score", 50)
+        if not llm_payload.get("violated_rules"):
+         llm_payload["violated_rules"] = matched
+        if "recommendations" not in llm_payload:
+         llm_payload["recommendations"] = []
+        llm_payload.setdefault("confidence", 90)
+        llm_payload["sources"] = rag_result["sources"]
+        llm_payload["rag"] = {"used_llm": rag_result["used_llm"], "model": rag_result["model"]}
+        if payload.debug:
+            llm_payload["debug"] = {"input_data": input_data, "deterministic_matches": matched}
+        return llm_payload
+
     return {
         "total_rules": len(rules),
         "match_count": len(matched),
         "matched_rules": matched,
         "rule_summary": {
-            "summary": "Review required before proceeding." if matched else "No configured rule violation matched this input."
+            "summary": rag_result["answer"] if rag_result["answer"] else (
+                "Review required before proceeding." if matched else "No configured rule violation matched this input."
+            )
         },
+        "sources": rag_result["sources"],
+        "rag": {"used_llm": rag_result["used_llm"], "model": rag_result["model"]},
         "debug": {"input_data": input_data} if payload.debug else None,
     }
 
@@ -289,18 +346,23 @@ def evaluate_rules(payload: EvaluationPayload, user: dict = Depends(current_user
 @app.post("/api/what-if")
 def what_if(payload: WhatIfPayload, user: dict = Depends(current_user)):
     question = payload.question.strip()
-    matches = sebi_repo.search(question, limit=3)
+    rag_result = rag_service.answer(question, mode="what_if", response_format="what_if_json")
+    if rag_result.get("used_llm"):
+     rag_result["sources"] = rag_result.get("sources", [])
+
+    rag_result["rag"] = {
+    "used_llm": rag_result.get("used_llm", False),
+    "model": rag_result.get("model"),
+}
+    return rag_result
+
+    matches = rag_result["sources"]
     risky = any(term in question.lower() for term in ["without", "default", "overdue", "not declared", "insider"])
     return {
         "compliance_status": "Needs review" if risky else "Preliminary clear",
         "risk_level": "High" if risky else "Medium",
         "rule_summary": matches[0]["title"] if matches else "No exact SEBI document match found.",
-        "analysis": (
-            "The scenario contains language that usually needs compliance review. "
-            "Check declaration status, reporting timelines, approvals, and supporting documents."
-            if risky
-            else "The scenario does not immediately indicate a breach, but the backend found related SEBI material to review."
-        ),
+       "analysis": rag_result["answer"],
         "what_could_happen_next": {
             "immediate": ["Internal compliance may ask for transaction purpose and evidence."],
             "regulatory": ["Regulatory reporting or clarification may be needed if thresholds or disclosure rules apply."],
@@ -312,6 +374,7 @@ def what_if(payload: WhatIfPayload, user: dict = Depends(current_user)):
             "risk_mitigation": ["Keep approvals, declarations, and audit trail in one place."],
         },
         "sources": matches,
+        "rag": {"used_llm": rag_result["used_llm"], "model": rag_result["model"]},
     }
 
 
@@ -377,6 +440,14 @@ def _get_chat(chat_id: str, owner: str) -> dict:
         if chat["id"] == chat_id and chat["owner"] == owner:
             return chat
     raise HTTPException(status_code=404, detail="Chat not found.")
+
+
+def json_safe(value):
+    if isinstance(value, list):
+        return [json_safe(item) for item in value]
+    if isinstance(value, dict):
+        return {key: json_safe(item) for key, item in value.items()}
+    return value
 
 
 def _rules() -> list[dict]:

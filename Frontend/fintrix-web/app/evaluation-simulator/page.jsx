@@ -28,6 +28,7 @@ export default function EvaluationPage() {
   const [domain, setDomain] = useState("forex");
   const [amount, setAmount] = useState("30000000");
   const [declared, setDeclared] = useState("false");
+  const [description, setDescription] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -40,10 +41,11 @@ export default function EvaluationPage() {
         headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify({
           input_data: {
-            domain,
-            amount: Number(amount || 0),
-            declared: declared === "true",
-          },
+    domain,
+    amount: Number(amount || 0),
+    declared: declared === "true",
+    description,
+},
           debug: true,
         }),
       });

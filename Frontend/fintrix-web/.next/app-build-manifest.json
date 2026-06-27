@@ -16,30 +16,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/ai-agent/page.js"
     ],
-    "/what-if-simulator/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/what-if-simulator/page.js"
-    ],
     "/evaluation-simulator/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/evaluation-simulator/page.js"
     ],
-    "/news/page": [
+    "/what-if-simulator/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/news/page.js"
+      "static/chunks/app/what-if-simulator/page.js"
     ],
-    "/blog/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/blog/page.js"
-    ],
-    "/learn/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/learn/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }
